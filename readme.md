@@ -1,5 +1,7 @@
 # Weather application
 
+![Weather application](display/weather_app_assign.png)
+
 For our first Android application, let us design a Weather application. We will first complete the application, then discuss the details later. We will learn by doing.
 If we need to specify what we will be doing, here is the list:
 
