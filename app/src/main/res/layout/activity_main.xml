@@ -10,6 +10,7 @@
     tools:context="mg.studio.weatherappdesign.MainActivity">
 
     <TextView
+        android:id="@+id/head_date"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
@@ -81,10 +82,10 @@
 
                 <ImageView
                     android:id="@+id/img_weather_condition"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="43dp"
+                    android:layout_height="52dp"
                     android:layout_gravity="center"
-                    app:srcCompat="@drawable/rainy_up" />
+                    app:srcCompat="@drawable/windy_small" />
 
                 <TextView
                     android:id="@+id/tv_location"
@@ -104,6 +105,16 @@
 
             </LinearLayout>
 
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorBlue"
+                android:layout_toRightOf="@id/linearLayout"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="13dp"
+                android:onClick="btnRefresh"
+                app:srcCompat="@android:drawable/ic_popup_sync" />
             <RelativeLayout
                 android:id="@+id/tv_temperature"
                 android:layout_width="match_parent"
@@ -131,7 +142,10 @@
                     android:gravity="right"
                     android:text="°C"
                     android:textColor="@android:color/white"
-                    android:textSize="22sp" />
+                    android:textSize="22sp"
+                    android:id="@+id/textView" />
+
+
 
 
             </RelativeLayout>
@@ -176,10 +190,11 @@
                 app:srcCompat="@drawable/rainy_small" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:gravity="center"
                 android:text="mon"
+                android:background="@drawable/blue_bg"
                 android:textAllCaps="true"
                 android:textColor="#909090" />
         </LinearLayout>
@@ -197,8 +212,8 @@
                 app:srcCompat="@drawable/partly_sunny_small" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:gravity="center"
                 android:text="tue"
                 android:textAllCaps="true"
@@ -218,10 +233,10 @@
                 app:srcCompat="@drawable/windy_small" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:gravity="center"
-                android:text="thu"
+                android:text="wed"
                 android:textAllCaps="true"
                 android:textColor="#909090" />
         </LinearLayout>
@@ -239,10 +254,10 @@
                 app:srcCompat="@drawable/sunny_small" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:gravity="center"
-                android:text="fri"
+                android:text="thu"
                 android:textAllCaps="true"
                 android:textColor="#909090" />
         </LinearLayout>
