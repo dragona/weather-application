@@ -1,3 +1,170 @@
+# weather-application-master
+
+![demonstration](https://github.com/Hubertyori/weather-application-master/blob/master/SVID_20180315_231541_20180315232208.gif)
+
+For the assignment , I did the following changes:
+1.	I used one image to be the background of TextView like "MON" , by the following code:
+
+TextView
+                android:layout_width="48dp"
+                
+                android:layout_height="48dp"
+                
+                android:gravity="center"
+                
+                android:text="mon"
+                
+                android:background="@drawable/blue_bg"
+                
+                android:textAllCaps="true"
+                
+                android:textColor="#909090"
+                
+                
+background:
+
+before:
+
+![MONDAY](https://github.com/Hubertyori/weather-application-master/blob/master/FMT_SX~%5DU8GY6ITTW\)~%7BUAJ.png)
+
+after:
+
+![BLUEBG](https://github.com/Hubertyori/weather-application-master/blob/master/%60TVI5%60Q5%5BO_~6%25%7D%7BBE%40%5B1%7BK.png)
+ 
+2.	I changed the icon that required by changing those code:
+
+![wind](https://github.com/Hubertyori/weather-application-master/blob/master/UNN%7BNS2OU8M%2492H%7DO1XYLWM.png)
+
+\<ImageView
+
+                    android:id="@+id/img_weather_condition"
+                    
+                    android:layout_width="43dp"
+                    
+                    android:layout_height="52dp"
+                    
+                    android:layout_gravity="center"
+                    
+                    app:srcCompat="@drawable/windy_small" />
+
+
+
+and I changed the app logo by change this line in AndroidManifest.xml
+                    
+                    
+this is what I choosed to be the new app logo:
+ 
+ ![icon](https://github.com/Hubertyori/weather-application-master/blob/master/weather_icon.png)
+ 
+3.	I added a imagebutton to refresh the data that required. I used the icon that android stdio are loaded and changed the background color of it, which looks like that:
+
+ ![ICON](https://github.com/Hubertyori/weather-application-master/blob/master/8HJAGO\(%7BS39\(%40DW1TB4CO\)Q.png)
+ 
+the code is following:
+
+The function btnRefresh() is the function that refresh the data. And the code is following:
+
+
+    public void btnRefresh(View view) {
+        new DownloadUpdate().execute();
+        myUploadData();
+    }
+
+    private void myUploadData() {
+    
+        Calendar c = Calendar.getInstance();
+        
+        int year = c.get(Calendar.YEAR);
+        
+        int month = c.get(Calendar.MONTH)+1;
+        
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        
+
+        String mWay = String.valueOf(c.get(Calendar.DAY_OF_WEEK));
+        
+        if("1".equals(mWay)){
+        
+            mWay ="SUNDAY";
+            
+        }else if("2".equals(mWay)){
+        
+            mWay ="MONDAY";
+            
+        }else if("3".equals(mWay)){
+        
+            mWay ="TUESDAY";
+            
+        }else if("4".equals(mWay)){
+        
+            mWay ="WEDNESDAY";
+            
+        }else if("5".equals(mWay)){
+        
+            mWay ="THURSDAY";
+            
+        }else if("6".equals(mWay)){
+        
+            mWay ="FRIDAY";
+            
+        }else if("7".equals(mWay)){
+        
+            mWay ="SATURDAY";
+        }
+        
+        String date = null;
+        
+        if(day>9&&month>9) {
+        
+             date = Integer.toString(month) + '/' + Integer.toString(day) + '/' + Integer.toString(year);
+             
+        }
+        
+        else if(day<10&&month>9){
+        
+             date = Integer.toString(month) + '/' + '0'+Integer.toString(day) + '/' + Integer.toString(year);
+             
+        }
+        
+        else if(month<10&&day>9){
+        
+             date ='0' + Integer.toString(month) + '/' +Integer.toString(day) + '/' + Integer.toString(year);
+             
+        }
+        
+        else{
+        
+             date ='0' + Integer.toString(month) + '/' +'0'+Integer.toString(day) + '/' + Integer.toString(year);
+             
+        }
+        
+        ((TextView) findViewById(R.id.head_date)).setText(mWay);
+        
+        ((TextView) findViewById(R.id.tv_date)).setText(date);
+        
+
+    }
+
+this the before I pressed the imgbutton:
+
+ ![SUNDAY](https://github.com/Hubertyori/weather-application-master/blob/master/X7%7BEUH%24CB%40OTZCW0%250QD%5D%407.png)
+
+ 
+and this is after:
+
+
+  ![THU](https://github.com/Hubertyori/weather-application-master/blob/master/%25AGIQB%60%7BPEDLK%60%24W2%25SCD\(0.png)
+ 
+If there are some bugs that I don't find out please tell me, thank you.
+
+Yori
+
+杨译绗
+
+20151639
+
+
+/***************************************************************/
 # Weather application
 
 ![Weather application](display/weather_app_assign.png)
