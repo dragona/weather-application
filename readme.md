@@ -1,8 +1,116 @@
 # weather-application-master
+the update application explan:
+![demonstration](https://github.com/Hubertyori/weather-application/blob/master/SVID_20180321_170127_20180321170943.gif)
 
-![demonstration](https://github.com/Hubertyori/weather-application-master/blob/master/SVID_20180315_231541_20180315232208.gif)
+For the assignment 002 , I added the Net-work state check code and the weather get code which can download the weather information from Hefeng Weather.
+First, I added one perminsion in androidManifest.XML
+\<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+to get the permission to access the Network state.
 
-For the assignment , I did the following changes:
+Then I used the following code to test if the internet are connected.
+        boolean success = false;
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo.State state = connManager.getNetworkInfo(
+                ConnectivityManager.TYPE_WIFI).getState(); // 获取网络连接状态
+        if (NetworkInfo.State.CONNECTED == state) { // whether using the WIFI or not
+            success = true;
+        }
+
+        state = connManager.getNetworkInfo(
+                ConnectivityManager.TYPE_MOBILE).getState(); // get the MOBILE net-connection state
+        if (NetworkInfo.State.CONNECTED == state) { // whether using the GPRS or not
+            success = true;
+        }
+        if (success) {
+            new DownloadUpdate().execute();
+            myUploadData();
+        } else {
+            Toast.makeText(MainActivity.this, "Please check your net-connection", Toast.LENGTH_LONG).show();
+
+        }
+To get the weather information from the internet , I applyed one accont from Hefeng Weather for free. And by the following code, I can download the weather information from the website.
+        private class DownloadUpdate extends AsyncTask<String, Void, String> {
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String stringUrl = "https://free-api.heweather.com/s6/weather/now?";
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader;
+            String location = "location=chongqing";
+
+
+            String key = "key=411e1bd9c04e4d6c80369ab50bcb63ac";
+
+            stringUrl = stringUrl
+                    + location + "&" + key;
+
+            try {
+                URL url = new URL(stringUrl);
+
+                // Create the request to get the information from the server, and open the connection
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    // Nothing to do.
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Mainly needed for debugging
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    // Stream was empty.  No point in parsing.
+                    return null;
+                }
+                //The temperature
+                return buffer.toString();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        /*
+        get the data from the json file which I download from hefeng weather
+         */
+        protected void onPostExecute(String temperature) {
+            //Update the temperature displayed
+            Pattern p = Pattern.compile("location.{3}([\u4E00-\u9FA5]+).*tmp.{3}(\\d+)\"");
+            Matcher m = p.matcher(temperature);
+            m = p.matcher(temperature);
+            String location = null;
+            String temprature = null;
+            if (m.find()) {
+                location = m.group(1);
+                temprature = m.group(2);
+            }
+            ((TextView) findViewById(R.id.temperature_of_the_day)).setText(temprature);
+            ((TextView) findViewById(R.id.tv_location)).setText(location);
+
+        }
+
+
+    }
+
+For the assignment 001 , I did the following changes:
 1.	I used one image to be the background of TextView like "MON" , by the following code:
 
 TextView
