@@ -1,5 +1,8 @@
 package mg.studio.weatherappdesign;
 
+
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,8 +18,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -25,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
     }
 
     public void btnClick(View view) {
@@ -33,44 +39,59 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void btnRefresh(View view) {
-        new DownloadUpdate().execute();
-        myUploadData();
+        boolean success = false;
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo.State state = connManager.getNetworkInfo(
+                ConnectivityManager.TYPE_WIFI).getState(); // 获取网络连接状态
+        if (NetworkInfo.State.CONNECTED == state) { // whether using the WIFI or not
+            success = true;
+        }
+
+        state = connManager.getNetworkInfo(
+                ConnectivityManager.TYPE_MOBILE).getState(); // get the MOBILE net-connection state
+        if (NetworkInfo.State.CONNECTED == state) { // whether using the GPRS or not
+            success = true;
+        }
+        if (success) {
+            new DownloadUpdate().execute();
+            myUploadData();
+        } else {
+            Toast.makeText(MainActivity.this, "Please check your net-connection", Toast.LENGTH_LONG).show();
+
+        }
     }
 
     private void myUploadData() {
         Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH)+1;
+        int month = c.get(Calendar.MONTH) + 1;
         int day = c.get(Calendar.DAY_OF_MONTH);
 
         String mWay = String.valueOf(c.get(Calendar.DAY_OF_WEEK));
-        if("1".equals(mWay)){
-            mWay ="SUNDAY";
-        }else if("2".equals(mWay)){
-            mWay ="MONDAY";
-        }else if("3".equals(mWay)){
-            mWay ="TUESDAY";
-        }else if("4".equals(mWay)){
-            mWay ="WEDNESDAY";
-        }else if("5".equals(mWay)){
-            mWay ="THURSDAY";
-        }else if("6".equals(mWay)){
-            mWay ="FRIDAY";
-        }else if("7".equals(mWay)){
-            mWay ="SATURDAY";
+        if ("1".equals(mWay)) {
+            mWay = "SUNDAY";
+        } else if ("2".equals(mWay)) {
+            mWay = "MONDAY";
+        } else if ("3".equals(mWay)) {
+            mWay = "TUESDAY";
+        } else if ("4".equals(mWay)) {
+            mWay = "WEDNESDAY";
+        } else if ("5".equals(mWay)) {
+            mWay = "THURSDAY";
+        } else if ("6".equals(mWay)) {
+            mWay = "FRIDAY";
+        } else if ("7".equals(mWay)) {
+            mWay = "SATURDAY";
         }
         String date = null;
-        if(day>9&&month>9) {
-             date = Integer.toString(month) + '/' + Integer.toString(day) + '/' + Integer.toString(year);
-        }
-        else if(day<10&&month>9){
-             date = Integer.toString(month) + '/' + '0'+Integer.toString(day) + '/' + Integer.toString(year);
-        }
-        else if(month<10&&day>9){
-             date ='0' + Integer.toString(month) + '/' +Integer.toString(day) + '/' + Integer.toString(year);
-        }
-        else{
-             date ='0' + Integer.toString(month) + '/' +'0'+Integer.toString(day) + '/' + Integer.toString(year);
+        if (day > 9 && month > 9) {
+            date = Integer.toString(month) + '/' + Integer.toString(day) + '/' + Integer.toString(year);
+        } else if (day < 10 && month > 9) {
+            date = Integer.toString(month) + '/' + '0' + Integer.toString(day) + '/' + Integer.toString(year);
+        } else if (month < 10 && day > 9) {
+            date = '0' + Integer.toString(month) + '/' + Integer.toString(day) + '/' + Integer.toString(year);
+        } else {
+            date = '0' + Integer.toString(month) + '/' + '0' + Integer.toString(day) + '/' + Integer.toString(year);
         }
         ((TextView) findViewById(R.id.head_date)).setText(mWay);
         ((TextView) findViewById(R.id.tv_date)).setText(date);
@@ -83,9 +104,16 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... strings) {
-            String stringUrl = "http://mpianatra.com/Courses/info.txt";
+            String stringUrl = "https://free-api.heweather.com/s6/weather/now?";
             HttpURLConnection urlConnection = null;
             BufferedReader reader;
+            String location = "location=chongqing";
+
+
+            String key = "key=411e1bd9c04e4d6c80369ab50bcb63ac";
+
+            stringUrl = stringUrl
+                    + location + "&" + key;
 
             try {
                 URL url = new URL(stringUrl);
@@ -131,18 +159,25 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         /*
-        the changes happened while refresh the weather information
-        change the bgcolor
-        change the date
-        change the image
-        change the temperature
+        get the data from the json file which I download from hefeng weather
          */
         protected void onPostExecute(String temperature) {
             //Update the temperature displayed
-            ((TextView) findViewById(R.id.temperature_of_the_day)).setText(temperature);
+            Pattern p = Pattern.compile("location.{3}([\u4E00-\u9FA5]+).*tmp.{3}(\\d+)\"");
+            Matcher m = p.matcher(temperature);
+            m = p.matcher(temperature);
+            String location = null;
+            String temprature = null;
+            if (m.find()) {
+                location = m.group(1);
+                temprature = m.group(2);
+            }
+            ((TextView) findViewById(R.id.temperature_of_the_day)).setText(temprature);
+            ((TextView) findViewById(R.id.tv_location)).setText(location);
 
         }
 
 
     }
+
 }
