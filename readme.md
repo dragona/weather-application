@@ -1,10 +1,13 @@
 # weather-application-master
 the update application explan:
-![demonstration](https://github.com/Hubertyori/weather-application/blob/master/SVID_20180321_170127_20180321170943.gif)
+
+![demonstration](https://github.com/Hubertyori/weather-application/blob/master/SVID_20180323_225239_20180323230757.gif)
 
 For the assignment 002 , I added the Net-work state check code and the weather get code which can download the weather information from Hefeng Weather.
 First, I added one perminsion in androidManifest.XML
+
 \<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 to get the permission to access the Network state.
 
 Then I used the following code to test if the internet are connected.
@@ -28,13 +31,15 @@ Then I used the following code to test if the internet are connected.
             Toast.makeText(MainActivity.this, "Please check your net-connection", Toast.LENGTH_LONG).show();
 
         }
+        
 To get the weather information from the internet , I applyed one accont from Hefeng Weather for free. And by the following code, I can download the weather information from the website.
         private class DownloadUpdate extends AsyncTask<String, Void, String> {
+private class DownloadUpdate extends AsyncTask<String, Void, String> {
 
 
         @Override
         protected String doInBackground(String... strings) {
-            String stringUrl = "https://free-api.heweather.com/s6/weather/now?";
+            String stringUrl = "https://free-api.heweather.com/s6/weather/forecast?";
             HttpURLConnection urlConnection = null;
             BufferedReader reader;
             String location = "location=chongqing";
@@ -87,27 +92,98 @@ To get the weather information from the internet , I applyed one accont from Hef
             return null;
         }
 
+And then I need to use the information I got. I changed today's date, the location, the temprature and the day in this week. What's more I changed the weather of day in the future.
+
         @Override
         /*
         get the data from the json file which I download from hefeng weather
          */
         protected void onPostExecute(String temperature) {
             //Update the temperature displayed
-            Pattern p = Pattern.compile("location.{3}([\u4E00-\u9FA5]+).*tmp.{3}(\\d+)\"");
             Matcher m = p.matcher(temperature);
             m = p.matcher(temperature);
             String location = null;
             String temprature = null;
+            String weather = null;
+            String date = null;
             if (m.find()) {
                 location = m.group(1);
-                temprature = m.group(2);
+                temprature = m.group(4);
+                weather = m.group(2);
+                date = m.group(3);
+
             }
-            ((TextView) findViewById(R.id.temperature_of_the_day)).setText(temprature);
-            ((TextView) findViewById(R.id.tv_location)).setText(location);
+            ImageView wea = findViewById(R.id.img_weather_condition);
+            TextView text = findViewById(R.id.temperature_of_the_day);//
+            myChangeWeather(wea,weather);//change the main image of weather
+            myChangeText(text,temprature);//change the temperature of today
+            text = findViewById(R.id.tv_location);
+            myChangeText(text,location);
+            text = findViewById(R.id.tv_date);
+            myChangeText(text,date);
 
+            //Change the list below
+            myChangeList(m);
         }
+        
+        private void myChangeList(Matcher m) {
+        String temp = m.group(2);
+        ImageView wea = findViewById(R.id.day_one);
+        myChangeWeather(wea,temp);
 
+        temp = ADate[mwee].substring(0,3);
+        TextView text = findViewById(R.id.text_day_one);
+        myChangeText(text,temp);
 
+        wea = findViewById(R.id.day_two);
+        temp = m.group(5);
+        myChangeWeather(wea,temp);
+
+        temp = ADate[(mwee+1)%7].substring(0,3);
+        text = findViewById(R.id.text_day_tow);
+        myChangeText(text,temp);
+
+        temp = m.group(8);
+        wea = findViewById(R.id.day_thr);
+        myChangeWeather(wea,temp);
+
+        temp = ADate[(mwee+2)%7].substring(0,3);
+        text = findViewById(R.id.text_day_thr);
+        myChangeText(text,temp);
+
+        temp = ADate[(mwee+3)%7].substring(0,3);
+        text = findViewById(R.id.text_day_fou);
+        myChangeText(text,temp);
+    }
+
+    private void myChangeText(TextView viewById, String location) {
+        viewById.setText(location);
+    }
+
+    private void myChangeWeather(ImageView wea, String weather) {
+        switch (weather){
+            case "阴":
+                wea.setImageResource(R.drawable.windy_small);
+                break;
+            case"小雨":
+                wea.setImageResource(R.drawable.rainy_small);
+                break;
+            case "晴":
+                wea.setImageResource(R.drawable.sunny_small);
+                break;
+            case"阵雨":
+                wea.setImageResource(R.drawable.rainy_small);
+                break;
+            case "多云":
+                wea.setImageResource(R.drawable.partly_sunny_small);
+                break;
+            case "晴间多云":
+                wea.setImageResource(R.drawable.partly_sunny_small);
+                break;
+            default:
+
+                break;
+        }
     }
 
 For the assignment 001 , I did the following changes:
