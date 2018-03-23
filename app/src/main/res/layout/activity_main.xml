@@ -10,6 +10,7 @@
     tools:context="mg.studio.weatherappdesign.MainActivity">
 
     <TextView
+        android:id="@+id/tv_week"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
@@ -91,7 +92,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Location"
+                    android:text="Chongqing"
                     android:textColor="@android:color/white"
                     android:textStyle="bold" />
 
@@ -99,6 +100,7 @@
                     android:id="@+id/tv_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+
                     android:text="03/03/2018"
                     android:textColor="@android:color/white" />
 
@@ -117,6 +119,9 @@
                     android:id="@+id/temperature_of_the_day"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
                     android:gravity="right"
                     android:text="28"
                     android:textColor="@android:color/white"
@@ -131,8 +136,21 @@
                     android:gravity="right"
                     android:text="°C"
                     android:textColor="@android:color/white"
-                    android:textSize="22sp" />
+                    android:textSize="22sp"
+                    android:id="@+id/textView" />
 
+                <Button
+                    android:id="@+id/button_refresh"
+                    android:layout_width="20.0dp"
+                    android:layout_height="20.0dp"
+                    android:layout_alignBaseline="@+id/temperature_of_the_day"
+                    android:layout_alignBottom="@+id/temperature_of_the_day"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:onClick="btnClick"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
+                    android:background="@drawable/button_selector" />
 
             </RelativeLayout>
 
@@ -176,8 +194,9 @@
                 app:srcCompat="@drawable/rainy_small" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:background="@drawable/circular_shape"
                 android:gravity="center"
                 android:text="mon"
                 android:textAllCaps="true"
@@ -197,8 +216,8 @@
                 app:srcCompat="@drawable/partly_sunny_small" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:gravity="center"
                 android:text="tue"
                 android:textAllCaps="true"
@@ -218,8 +237,8 @@
                 app:srcCompat="@drawable/windy_small" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:gravity="center"
                 android:text="thu"
                 android:textAllCaps="true"
@@ -239,8 +258,8 @@
                 app:srcCompat="@drawable/sunny_small" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:gravity="center"
                 android:text="fri"
                 android:textAllCaps="true"
