@@ -15,16 +15,72 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
+import java.util.*;
+import org.json.JSONObject;
+
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int msgKey1 = 1;
+    private TextView mData;
+    private TextView mWeek;
+    private TextView mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mData = (TextView) findViewById(R.id.tv_date);
+        mWeek = (TextView) findViewById(R.id.tv_week);
+        mLocation = (TextView) findViewById(R.id.tv_location);
+
+        new DownloadUpdate().execute();
     }
 
+
+    //获得当前年月日
+    public String getData(){
+        final Calendar c = Calendar.getInstance();
+        c.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+        String mYear = String.valueOf(c.get(Calendar.YEAR)); // 获取当前年份
+        String mMonth = String.valueOf(c.get(Calendar.MONTH) + 1);// 获取当前月份
+        String mDay = String.valueOf(c.get(Calendar.DAY_OF_MONTH));// 获取当前月份的日期号码
+
+        //统一格式
+        if(Integer.parseInt(mMonth)<10){mMonth="0"+mMonth;}
+        if(Integer.parseInt(mDay)<10){mDay="0"+mDay;}
+
+        return mMonth + "/" +mDay + "/" + mYear;
+    }
+
+    //获得当前星期
+    public String getWeek(){
+        final Calendar c = Calendar.getInstance();
+        c.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+        String mWay = String.valueOf(c.get(Calendar.DAY_OF_WEEK));
+
+        if("1".equals(mWay)){
+            mWay ="SUNDAY";
+        }else if("2".equals(mWay)){
+            mWay ="MONDAY";
+        }else if("3".equals(mWay)){
+            mWay ="TUESDAY";
+        }else if("4".equals(mWay)){
+            mWay ="WEDNESDAY";
+        }else if("5".equals(mWay)){
+            mWay ="THURSDAY";
+        }else if("6".equals(mWay)){
+            mWay ="FRIDAY";
+        }else if("7".equals(mWay)){
+            mWay ="SATURDAY";
+        }
+
+        return mWay;
+    }
+
+
     public void btnClick(View view) {
+        
         new DownloadUpdate().execute();
     }
 
@@ -34,9 +90,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... strings) {
-            String stringUrl = "http://mpianatra.com/Courses/info.txt";
+            String stringUrl= "http://v.juhe.cn/weather/index?format=2&cityname=重庆&key=3f915b0cad6ae92729f8eb1f0446b66d";
             HttpURLConnection urlConnection = null;
             BufferedReader reader;
+            mData.setText(getData());
+            mWeek.setText(getWeek());
 
             try {
                 URL url = new URL(stringUrl);
@@ -67,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                     return null;
                 }
                 //The temperature
-                return buffer.toString();
+                return buffer.toString().substring(66,68);
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
