@@ -1,3 +1,354 @@
+# weather-application-master
+the update application explan:
+
+![demonstration](https://github.com/Hubertyori/weather-application/blob/master/SVID_20180323_225239_20180323230757.gif)
+
+For the assignment 002 , I added the Net-work state check code and the weather get code which can download the weather information from Hefeng Weather.
+First, I added one perminsion in androidManifest.XML
+
+\<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+to get the permission to access the Network state.
+
+Then I used the following code to test if the internet are connected.
+        boolean success = false;
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo.State state = connManager.getNetworkInfo(
+                ConnectivityManager.TYPE_WIFI).getState(); // 获取网络连接状态
+        if (NetworkInfo.State.CONNECTED == state) { // whether using the WIFI or not
+            success = true;
+        }
+
+        state = connManager.getNetworkInfo(
+                ConnectivityManager.TYPE_MOBILE).getState(); // get the MOBILE net-connection state
+        if (NetworkInfo.State.CONNECTED == state) { // whether using the GPRS or not
+            success = true;
+        }
+        if (success) {
+            new DownloadUpdate().execute();
+            myUploadData();
+        } else {
+            Toast.makeText(MainActivity.this, "Please check your net-connection", Toast.LENGTH_LONG).show();
+
+        }
+        
+To get the weather information from the internet , I applyed one accont from Hefeng Weather for free. And by the following code, I can download the weather information from the website.
+        private class DownloadUpdate extends AsyncTask<String, Void, String> {
+private class DownloadUpdate extends AsyncTask<String, Void, String> {
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String stringUrl = "https://free-api.heweather.com/s6/weather/forecast?";
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader;
+            String location = "location=chongqing";
+
+
+            String key = "key=411e1bd9c04e4d6c80369ab50bcb63ac";
+
+            stringUrl = stringUrl
+                    + location + "&" + key;
+
+            try {
+                URL url = new URL(stringUrl);
+
+                // Create the request to get the information from the server, and open the connection
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    // Nothing to do.
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Mainly needed for debugging
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    // Stream was empty.  No point in parsing.
+                    return null;
+                }
+                //The temperature
+                return buffer.toString();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+And then I need to use the information I got. I changed today's date, the location, the temprature and the day in this week. What's more I changed the weather of day in the future.
+
+        @Override
+        /*
+        get the data from the json file which I download from hefeng weather
+         */
+        protected void onPostExecute(String temperature) {
+            //Update the temperature displayed
+            Matcher m = p.matcher(temperature);
+            m = p.matcher(temperature);
+            String location = null;
+            String temprature = null;
+            String weather = null;
+            String date = null;
+            if (m.find()) {
+                location = m.group(1);
+                temprature = m.group(4);
+                weather = m.group(2);
+                date = m.group(3);
+
+            }
+            ImageView wea = findViewById(R.id.img_weather_condition);
+            TextView text = findViewById(R.id.temperature_of_the_day);//
+            myChangeWeather(wea,weather);//change the main image of weather
+            myChangeText(text,temprature);//change the temperature of today
+            text = findViewById(R.id.tv_location);
+            myChangeText(text,location);
+            text = findViewById(R.id.tv_date);
+            myChangeText(text,date);
+
+            //Change the list below
+            myChangeList(m);
+        }
+        
+        private void myChangeList(Matcher m) {
+        String temp = m.group(2);
+        ImageView wea = findViewById(R.id.day_one);
+        myChangeWeather(wea,temp);
+
+        temp = ADate[mwee].substring(0,3);
+        TextView text = findViewById(R.id.text_day_one);
+        myChangeText(text,temp);
+
+        wea = findViewById(R.id.day_two);
+        temp = m.group(5);
+        myChangeWeather(wea,temp);
+
+        temp = ADate[(mwee+1)%7].substring(0,3);
+        text = findViewById(R.id.text_day_tow);
+        myChangeText(text,temp);
+
+        temp = m.group(8);
+        wea = findViewById(R.id.day_thr);
+        myChangeWeather(wea,temp);
+
+        temp = ADate[(mwee+2)%7].substring(0,3);
+        text = findViewById(R.id.text_day_thr);
+        myChangeText(text,temp);
+
+        temp = ADate[(mwee+3)%7].substring(0,3);
+        text = findViewById(R.id.text_day_fou);
+        myChangeText(text,temp);
+    }
+
+    private void myChangeText(TextView viewById, String location) {
+        viewById.setText(location);
+    }
+
+    private void myChangeWeather(ImageView wea, String weather) {
+        switch (weather){
+            case "阴":
+                wea.setImageResource(R.drawable.windy_small);
+                break;
+            case"小雨":
+                wea.setImageResource(R.drawable.rainy_small);
+                break;
+            case "晴":
+                wea.setImageResource(R.drawable.sunny_small);
+                break;
+            case"阵雨":
+                wea.setImageResource(R.drawable.rainy_small);
+                break;
+            case "多云":
+                wea.setImageResource(R.drawable.partly_sunny_small);
+                break;
+            case "晴间多云":
+                wea.setImageResource(R.drawable.partly_sunny_small);
+                break;
+            default:
+
+                break;
+        }
+    }
+
+For the assignment 001 , I did the following changes:
+1.	I used one image to be the background of TextView like "MON" , by the following code:
+
+TextView
+                android:layout_width="48dp"
+                
+                android:layout_height="48dp"
+                
+                android:gravity="center"
+                
+                android:text="mon"
+                
+                android:background="@drawable/blue_bg"
+                
+                android:textAllCaps="true"
+                
+                android:textColor="#909090"
+                
+                
+background:
+
+before:
+
+![MONDAY](https://github.com/Hubertyori/weather-application-master/blob/master/FMT_SX~%5DU8GY6ITTW\)~%7BUAJ.png)
+
+after:
+
+![BLUEBG](https://github.com/Hubertyori/weather-application-master/blob/master/%60TVI5%60Q5%5BO_~6%25%7D%7BBE%40%5B1%7BK.png)
+ 
+2.	I changed the icon that required by changing those code:
+
+![wind](https://github.com/Hubertyori/weather-application-master/blob/master/UNN%7BNS2OU8M%2492H%7DO1XYLWM.png)
+
+\<ImageView
+
+                    android:id="@+id/img_weather_condition"
+                    
+                    android:layout_width="43dp"
+                    
+                    android:layout_height="52dp"
+                    
+                    android:layout_gravity="center"
+                    
+                    app:srcCompat="@drawable/windy_small" />
+
+
+
+and I changed the app logo by change this line in AndroidManifest.xml
+                    
+                    
+this is what I choosed to be the new app logo:
+ 
+ ![icon](https://github.com/Hubertyori/weather-application-master/blob/master/weather_icon.png)
+ 
+3.	I added a imagebutton to refresh the data that required. I used the icon that android stdio are loaded and changed the background color of it, which looks like that:
+
+ ![ICON](https://github.com/Hubertyori/weather-application-master/blob/master/8HJAGO\(%7BS39\(%40DW1TB4CO\)Q.png)
+ 
+the code is following:
+
+The function btnRefresh() is the function that refresh the data. And the code is following:
+
+
+    public void btnRefresh(View view) {
+        new DownloadUpdate().execute();
+        myUploadData();
+    }
+
+    private void myUploadData() {
+    
+        Calendar c = Calendar.getInstance();
+        
+        int year = c.get(Calendar.YEAR);
+        
+        int month = c.get(Calendar.MONTH)+1;
+        
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        
+
+        String mWay = String.valueOf(c.get(Calendar.DAY_OF_WEEK));
+        
+        if("1".equals(mWay)){
+        
+            mWay ="SUNDAY";
+            
+        }else if("2".equals(mWay)){
+        
+            mWay ="MONDAY";
+            
+        }else if("3".equals(mWay)){
+        
+            mWay ="TUESDAY";
+            
+        }else if("4".equals(mWay)){
+        
+            mWay ="WEDNESDAY";
+            
+        }else if("5".equals(mWay)){
+        
+            mWay ="THURSDAY";
+            
+        }else if("6".equals(mWay)){
+        
+            mWay ="FRIDAY";
+            
+        }else if("7".equals(mWay)){
+        
+            mWay ="SATURDAY";
+        }
+        
+        String date = null;
+        
+        if(day>9&&month>9) {
+        
+             date = Integer.toString(month) + '/' + Integer.toString(day) + '/' + Integer.toString(year);
+             
+        }
+        
+        else if(day<10&&month>9){
+        
+             date = Integer.toString(month) + '/' + '0'+Integer.toString(day) + '/' + Integer.toString(year);
+             
+        }
+        
+        else if(month<10&&day>9){
+        
+             date ='0' + Integer.toString(month) + '/' +Integer.toString(day) + '/' + Integer.toString(year);
+             
+        }
+        
+        else{
+        
+             date ='0' + Integer.toString(month) + '/' +'0'+Integer.toString(day) + '/' + Integer.toString(year);
+             
+        }
+        
+        ((TextView) findViewById(R.id.head_date)).setText(mWay);
+        
+        ((TextView) findViewById(R.id.tv_date)).setText(date);
+        
+
+    }
+
+this the before I pressed the imgbutton:
+
+ ![SUNDAY](https://github.com/Hubertyori/weather-application-master/blob/master/X7%7BEUH%24CB%40OTZCW0%250QD%5D%407.png)
+
+ 
+and this is after:
+
+
+  ![THU](https://github.com/Hubertyori/weather-application-master/blob/master/%25AGIQB%60%7BPEDLK%60%24W2%25SCD\(0.png)
+ 
+If there are some bugs that I don't find out please tell me, thank you.
+
+Yori
+
+杨译绗
+
+20151639
+
+
+/***************************************************************/
 # Weather application
 
 ![Weather application](display/weather_app_assign.png)

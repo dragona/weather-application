@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="0dp"
+    android:background="@drawable/bg">
+
+    <TextView
+        android:id="@+id/tv_animals"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btn_play"
+        android:layout_margin="100dp"
+        android:fontFamily="@font/font_one"
+        android:gravity="center"
+        android:text="Animals"
+        android:textColor="@android:color/white"
+        android:textSize="40sp" />
+
+
+    <Button
+        android:id="@+id/how_to"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/selector"
+        android:fontFamily="@font/font_one"
+        android:onClick="btnHowTo"
+        android:text="How To"
+        android:textAllCaps="true"
+        android:textColor="@drawable/text_selector"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btn_play"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/how_to"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:background="@drawable/selector"
+        android:fontFamily="@font/font_one"
+        android:onClick="btnStart"
+        android:text="Start"
+        android:textColor="@drawable/text_selector"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>
