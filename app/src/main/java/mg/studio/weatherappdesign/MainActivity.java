@@ -3,8 +3,10 @@ package mg.studio.weatherappdesign;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... strings) {
-            String stringUrl = "http://mpianatra.com/Courses/info.txt";
+            String stringUrl = "https://mpianatra.com/Courses/info.txt";
             HttpURLConnection urlConnection = null;
             BufferedReader reader;
 
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     // Mainly needed for debugging
+                    Log.d("TAG", line);
                     buffer.append(line + "\n");
                 }
 
