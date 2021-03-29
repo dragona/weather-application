@@ -126,8 +126,8 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignRight="@id/temperature_of_the_day"
                     android:layout_alignTop="@id/temperature_of_the_day"
+                    android:layout_alignRight="@id/temperature_of_the_day"
                     android:gravity="right"
                     android:text="°C"
                     android:textColor="@android:color/white"
