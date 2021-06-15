@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... strings) {
-            String stringUrl = "https://mpianatra.com/Courses/info.txt";
+            String stringUrl = "https://studio.mg/files/info.txt";
             HttpURLConnection urlConnection = null;
             BufferedReader reader;
 
